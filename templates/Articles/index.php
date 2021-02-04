@@ -3,8 +3,9 @@
 <table>
     <tr>
         <th>Id</th>
-        <th>Title</th>
-        <th>Created</th>
+        <th>Título</th>
+        <th>Criado</th>
+        <th>Ações</th>
     </tr>
 
     <?php foreach ($articles as $article): ?>
@@ -17,6 +18,11 @@
                 <?= $article->created->format(DATE_RFC850) ?>
             </td>
             <td>
+                <?= $this->Form->postLink(
+                    'Deletar',
+                    ['action' => 'delete', $article->id],
+                    ['confirm' => 'Tem certeza?'])
+                ?>
                 <?= $this->Html->link('Editar', ['action' => 'edit', $article->id]) ?>
             </td>
         </tr>
