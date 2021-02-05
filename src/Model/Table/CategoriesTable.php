@@ -96,7 +96,7 @@ class CategoriesTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn(['parent_id'], 'ParentCategories'), ['errorField' => 'parent_id']);
+        // $rules->add($rules->existsIn(['parent_id'], 'ParentCategories'), ['errorField' => 'parent_id']);
 
         return $rules;
     }
