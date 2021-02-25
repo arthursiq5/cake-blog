@@ -15,3 +15,12 @@ INSERT INTO articles (title,body,created)
     VALUES ('A title once again', 'And the article body follows.', NOW());
 INSERT INTO articles (title,body,created)
     VALUES ('Title strikes back', 'This is really exciting! Not.', NOW());
+
+CREATE TABLE users (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255),
+    password VARCHAR(255),
+    role VARCHAR(20),
+    created DATETIME DEFAULT NULL,
+    modified DATETIME DEFAULT NULL
+);
