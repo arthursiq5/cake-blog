@@ -24,3 +24,4 @@ CREATE TABLE users (
     created DATETIME DEFAULT NULL,
     modified DATETIME DEFAULT NULL
 );
+ALTER TABLE articles ADD COLUMN user_id INT(11);
