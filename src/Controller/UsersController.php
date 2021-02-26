@@ -17,7 +17,7 @@ class UsersController extends AppController
     public function beforeFilter(EventInterface $event): void
     {
         parent::beforeFilter($event);
-        $this->Auth->allow('add');
+        $this->Auth->allow(['add', 'logout']);
     }
 
     public function initialize(): void
@@ -67,5 +67,22 @@ class UsersController extends AppController
             $this->Flash->error(__('Não é possível adicionar o usuário.'));
         }
         $this->set('user', $user);
+    }
+
+    public function login()
+    {
+        if ($this->request->is('post')) {
+            $user = $this->Auth->identify();
+            if ($user) {
+                $this->Auth->setUser($user);
+                return $this->redirect($this->Auth->redirectUrl());
+            }
+            $this->Flash->error(__('Usuário ou senha ínvalido, tente novamente'));
+        }
+    }
+
+    public function logout()
+    {
+        return $this->redirect($this->Auth->logout());
     }
 }

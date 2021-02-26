@@ -46,12 +46,16 @@ class ArticlesController extends AppController
     public function add()
     {
         $article = $this->Articles->newEmptyEntity();
+
         if ($this->request->is('post')) {
             $article = $this->Articles->patchEntity($article, $this->request->getData());
+            $article->user_id = $this->Auth->user('id');
+
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('Seu artigo foi salvo.'));
                 return $this->redirect(['action' => 'index']);
             }
+
             $this->Flash->error(__('Não é possível adicionar o seu artigo.'));
         }
         $this->set('article', $article);
@@ -98,5 +102,23 @@ class ArticlesController extends AppController
             $this->Flash->success(__('O artigo com id: {0} foi deletado.', h($id)));
             return $this->redirect(['action' => 'index']);
         }
+    }
+
+    public function isAuthorized($user)
+    {
+        // Todos os usuários registrados podem adicionar artigos
+        if ($this->request->getParam('action') === 'add') {
+            return true;
+        }
+
+        // Apenas o proprietário do artigo pode editar e excluí
+        if (in_array($this->request->getParam('action'), ['edit', 'delete'])) {
+            $articleId = (int)$this->request->getParam('pass.0');
+            if ($this->Articles->isOwnedBy($articleId, $user['id'])) {
+                return true;
+            }
+        }
+
+        return parent::isAuthorized($user);
     }
 }

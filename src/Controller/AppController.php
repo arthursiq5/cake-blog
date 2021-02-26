@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Event\EventInterface;
 
 /**
  * Application Controller
@@ -28,6 +29,10 @@ use Cake\Controller\Controller;
  */
 class AppController extends Controller
 {
+    public function beforeFilter(EventInterface $event): void
+    {
+        $this->Auth->allow(['index', 'view', 'display']);
+    }
     /**
      * Initialization hook method.
      *
@@ -44,10 +49,28 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
 
-        /*
-         * Enable the following component for recommended CakePHP form protection settings.
-         * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
-         */
-        //$this->loadComponent('FormProtection');
+        $this->loadComponent('Auth', [
+            'authorize' => ['Controller'],
+            'loginRedirect' => [
+                'controller' => 'Articles',
+                'action' => 'index'
+            ],
+            'logoutRedirect' => [
+                'controller' => 'Pages',
+                'action' => 'display',
+                'home'
+            ]
+        ]);
+    }
+
+    public function isAuthorized($user)
+    {
+        // Admin pode acessar todas as actions
+        if (isset($user['role']) && $user['role'] === 'admin') {
+            return true;
+        }
+
+        // Bloqueia acesso por padrão
+        return false;
     }
 }
